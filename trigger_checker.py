@@ -69,16 +69,13 @@ def main(Data, Station, Run, Output):
         usefulEvent = ROOT.UsefulAtriStationEvent(rawEvent,ROOT.AraCalType.kLatestCalib)
         """
 
+        # selecting only calpulser event
         if rawEvent.isCalpulserEvent() == 1:
-            #print(f'Evt{event} is Calpulser triggered event.')
 
             # trigger info
             num_high_trig = rawEvent.numTriggerChansHigh() # number of high trigger channel
             high_trig_ch = []
 
-            # create h5 group
-            g1 = hf.create_group(f'Evt{event}')
- 
             # extracting time and volt from every antenna
             for c in range(16):
 
@@ -100,10 +97,12 @@ def main(Data, Station, Run, Output):
                 g1.create_dataset(f'raw_wf_Ch{c}', data=np.stack([raw_time, raw_volt],axis=-1), compression="gzip", compression_opts=9)
                 """
 
+            #print(f'Evt{event} is Calpulser triggered event.')
             #print('# of high trigger channel:',num_high_trig)
             #print('high triggered channel:', high_trig_ch)
        
             # save trigger info
+            g1 = hf.create_group(f'Evt{event}')
             g1.create_dataset('numTriggerChansHigh', data=np.array([num_high_trig]), compression="gzip", compression_opts=9)
             g1.create_dataset('isTriggerChanHigh', data=np.asarray(high_trig_ch).astype(int), compression="gzip", compression_opts=9)
  
