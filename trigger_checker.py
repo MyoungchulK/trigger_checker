@@ -76,6 +76,9 @@ def main(Data, Station, Run, Output):
             num_high_trig = rawEvent.numTriggerChansHigh() # number of high trigger channel
             high_trig_ch = []
 
+            # create group
+            g1 = hf.create_group(f'Evt{event}')
+
             # extracting time and volt from every antenna
             for c in range(16):
 
@@ -102,7 +105,6 @@ def main(Data, Station, Run, Output):
             #print('high triggered channel:', high_trig_ch)
        
             # save trigger info
-            g1 = hf.create_group(f'Evt{event}')
             g1.create_dataset('numTriggerChansHigh', data=np.array([num_high_trig]), compression="gzip", compression_opts=9)
             g1.create_dataset('isTriggerChanHigh', data=np.asarray(high_trig_ch).astype(int), compression="gzip", compression_opts=9)
  
